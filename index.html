@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="What If">
+  <title>What If Calculator</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      background: #f2f2f7;
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1c1c1e;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #8e8e93;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .term-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #8e8e93;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .row:last-of-type { margin-bottom: 0; }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .field label {
+      font-size: 11px;
+      color: #8e8e93;
+      margin-bottom: 4px;
+    }
+
+    .field input {
+      font-size: 17px;
+      font-weight: 500;
+      color: #1c1c1e;
+      border: none;
+      border-bottom: 1.5px solid #d1d1d6;
+      padding: 6px 2px;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      -webkit-appearance: none;
+    }
+
+    .field input:focus {
+      border-bottom-color: #1c1c1e;
+    }
+
+    .operator {
+      font-size: 20px;
+      color: #8e8e93;
+      padding-top: 18px;
+    }
+
+    .row-result {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid #f2f2f7;
+      margin-top: 14px;
+    }
+
+    .row-result .result-label {
+      font-size: 13px;
+      color: #8e8e93;
+      margin-right: auto;
+    }
+
+    .row-result .result-value {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1c1c1e;
+    }
+
+    .total-card {
+      background: #1c1c1e;
+      border-radius: 16px;
+      padding: 24px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .total-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #f2f2f7;
+    }
+
+    .total-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .reset-btn {
+      display: block;
+      width: 100%;
+      margin-top: 16px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #8e8e93;
+      background: #ffffff;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      -webkit-appearance: none;
+    }
+
+    .reset-btn:active { opacity: 0.6; }
+  </style>
+</head>
+<body>
+
+  <h1>What If</h1>
+  <p class="subtitle">Revenue projection calculator</p>
+
+  <!-- 1 Year -->
+  <div class="card">
+    <div class="term-label">1 Year Term</div>
+    <div class="row">
+      <div class="field">
+        <label>Avg Revenue ($)</label>
+        <input type="number" inputmode="decimal" id="rev1" placeholder="0" min="0" oninput="calc()">
+      </div>
+      <div class="operator">×</div>
+      <div class="field">
+        <label>Times Sold</label>
+        <input type="number" inputmode="numeric" id="qty1" placeholder="0" min="0" oninput="calc()">
+      </div>
+    </div>
+    <div class="row-result">
+      <span class="result-label">Subtotal</span>
+      <span class="result-value" id="sub1">$0</span>
+    </div>
+  </div>
+
+  <!-- 2 Year -->
+  <div class="card">
+    <div class="term-label">2 Year Term</div>
+    <div class="row">
+      <div class="field">
+        <label>Avg Revenue ($)</label>
+        <input type="number" inputmode="decimal" id="rev2" placeholder="0" min="0" oninput="calc()">
+      </div>
+      <div class="operator">×</div>
+      <div class="field">
+        <label>Times Sold</label>
+        <input type="number" inputmode="numeric" id="qty2" placeholder="0" min="0" oninput="calc()">
+      </div>
+    </div>
+    <div class="row-result">
+      <span class="result-label">Subtotal</span>
+      <span class="result-value" id="sub2">$0</span>
+    </div>
+  </div>
+
+  <!-- 3 Year -->
+  <div class="card">
+    <div class="term-label">3 Year Term</div>
+    <div class="row">
+      <div class="field">
+        <label>Avg Revenue ($)</label>
+        <input type="number" inputmode="decimal" id="rev3" placeholder="0" min="0" oninput="calc()">
+      </div>
+      <div class="operator">×</div>
+      <div class="field">
+        <label>Times Sold</label>
+        <input type="number" inputmode="numeric" id="qty3" placeholder="0" min="0" oninput="calc()">
+      </div>
+    </div>
+    <div class="row-result">
+      <span class="result-label">Subtotal</span>
+      <span class="result-value" id="sub3">$0</span>
+    </div>
+  </div>
+
+  <!-- Total -->
+  <div class="total-card">
+    <span class="total-label">Total Revenue</span>
+    <span class="total-value" id="total">$0</span>
+  </div>
+
+  <button class="reset-btn" onclick="reset()">Reset</button>
+
+  <script>
+    function fmt(n) {
+      return '$' + n.toLocaleString('en-AU', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+
+    function val(id) {
+      return parseFloat(document.getElementById(id).value) || 0;
+    }
+
+    function calc() {
+      const s1 = val('rev1') * val('qty1');
+      const s2 = val('rev2') * val('qty2');
+      const s3 = val('rev3') * val('qty3');
+      document.getElementById('sub1').textContent = fmt(s1);
+      document.getElementById('sub2').textContent = fmt(s2);
+      document.getElementById('sub3').textContent = fmt(s3);
+      document.getElementById('total').textContent = fmt(s1 + s2 + s3);
+    }
+
+    function reset() {
+      ['rev1','qty1','rev2','qty2','rev3','qty3'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      calc();
+    }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+</body>
+</html>
