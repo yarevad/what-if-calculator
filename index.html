@@ -15,142 +15,120 @@
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
       background: #f2f2f7;
       min-height: 100vh;
-      padding: 24px 16px 48px;
+      padding: 24px 16px 56px;
     }
 
-    h1 {
-      font-size: 28px;
-      font-weight: 700;
-      color: #1c1c1e;
-      margin-bottom: 6px;
-    }
+    h1 { font-size: 28px; font-weight: 700; color: #1c1c1e; margin-bottom: 4px; }
+    .subtitle { font-size: 14px; color: #8e8e93; margin-bottom: 28px; }
 
-    .subtitle {
-      font-size: 14px;
-      color: #8e8e93;
-      margin-bottom: 28px;
+    .section-title {
+      font-size: 12px; font-weight: 600; color: #8e8e93;
+      text-transform: uppercase; letter-spacing: 0.6px;
+      margin: 0 4px 8px;
     }
 
     .card {
-      background: #ffffff;
+      background: #fff;
       border-radius: 16px;
       padding: 20px 16px;
       margin-bottom: 16px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     }
 
-    .term-label {
-      font-size: 13px;
-      font-weight: 600;
-      color: #8e8e93;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 14px;
-    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .grid-2 + .grid-3, .grid-3 + .grid-2 { margin-top: 16px; }
 
-    .row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .row:last-of-type { margin-bottom: 0; }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
+    .field { display: flex; flex-direction: column; }
 
     .field label {
-      font-size: 11px;
-      color: #8e8e93;
-      margin-bottom: 4px;
+      font-size: 11px; color: #8e8e93; margin-bottom: 4px;
     }
 
     .field input {
-      font-size: 17px;
-      font-weight: 500;
-      color: #1c1c1e;
-      border: none;
-      border-bottom: 1.5px solid #d1d1d6;
-      padding: 6px 2px;
-      background: transparent;
-      outline: none;
-      width: 100%;
-      -webkit-appearance: none;
+      font-size: 16px; font-weight: 500; color: #1c1c1e;
+      border: none; border-bottom: 1.5px solid #d1d1d6;
+      padding: 6px 2px; background: transparent;
+      outline: none; width: 100%; -webkit-appearance: none;
     }
 
-    .field input:focus {
-      border-bottom-color: #1c1c1e;
+    .field input:focus { border-bottom-color: #1c1c1e; }
+
+    /* derived value pill shown next to a label */
+    .derived-row {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-top: 14px;
+      padding-top: 12px; border-top: 1px solid #f2f2f7;
     }
 
-    .operator {
-      font-size: 20px;
-      color: #8e8e93;
-      padding-top: 18px;
+    .derived-row .d-label { font-size: 13px; color: #8e8e93; }
+    .derived-row .d-value { font-size: 16px; font-weight: 600; color: #1c1c1e; }
+
+    /* What If section */
+    .wi-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 0; border-bottom: 1px solid #f2f2f7;
     }
 
-    .row-result {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      padding-top: 12px;
-      border-top: 1px solid #f2f2f7;
-      margin-top: 14px;
+    .wi-row:first-child { padding-top: 0; }
+    .wi-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+
+    .wi-tag {
+      font-size: 12px; font-weight: 700; color: #8e8e93;
+      text-transform: uppercase; letter-spacing: 0.4px;
+      width: 48px; flex-shrink: 0;
     }
 
-    .row-result .result-label {
-      font-size: 13px;
-      color: #8e8e93;
-      margin-right: auto;
+    .wi-row .field { flex: 1; }
+
+    .wi-rev {
+      font-size: 16px; font-weight: 600; color: #1c1c1e;
+      text-align: right; min-width: 76px; padding-top: 14px;
+      flex-shrink: 0;
     }
 
-    .row-result .result-value {
-      font-size: 18px;
-      font-weight: 600;
-      color: #1c1c1e;
+    /* balance strip */
+    .balance-strip {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 14px; padding-top: 12px; border-top: 1px solid #f2f2f7;
     }
 
-    .total-card {
-      background: #1c1c1e;
-      border-radius: 16px;
-      padding: 24px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    .balance-strip .bl { font-size: 13px; color: #8e8e93; }
+    .balance-strip .bv { font-size: 14px; font-weight: 600; }
+
+    /* Results */
+    .results-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+
+    .result-box {
+      border-radius: 16px; padding: 20px 16px;
+      display: flex; flex-direction: column; gap: 4px;
     }
 
-    .total-label {
-      font-size: 16px;
-      font-weight: 600;
-      color: #f2f2f7;
-    }
+    .result-box.dark { background: #1c1c1e; }
+    .result-box.light { background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
 
-    .total-value {
-      font-size: 28px;
-      font-weight: 700;
-      color: #ffffff;
-    }
+    .result-box .rl { font-size: 12px; font-weight: 600; }
+    .result-box.dark .rl { color: #8e8e93; }
+    .result-box.light .rl { color: #8e8e93; }
+
+    .result-box .rv { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+    .result-box.dark .rv { color: #fff; }
+    .result-box.light .rv { color: #1c1c1e; }
 
     .reset-btn {
-      display: block;
-      width: 100%;
-      margin-top: 16px;
-      padding: 14px;
-      font-size: 15px;
-      font-weight: 500;
-      color: #8e8e93;
-      background: #ffffff;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      -webkit-appearance: none;
+      display: block; width: 100%; padding: 14px;
+      font-size: 15px; font-weight: 500; color: #8e8e93;
+      background: #fff; border: none; border-radius: 12px;
+      cursor: pointer; -webkit-appearance: none;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     }
 
     .reset-btn:active { opacity: 0.6; }
+
+    .green  { color: #34c759; }
+    .orange { color: #ff9500; }
+    .red    { color: #ff3b30; }
+    .muted  { color: #8e8e93; }
   </style>
 </head>
 <body>
@@ -158,103 +136,243 @@
   <h1>What If</h1>
   <p class="subtitle">Revenue projection calculator</p>
 
-  <!-- 1 Year -->
+  <!-- ── BASELINE ── -->
+  <div class="section-title">Baseline</div>
   <div class="card">
-    <div class="term-label">1 Year Term</div>
-    <div class="row">
+
+    <!-- Row 1: revenue + percentages -->
+    <div class="grid-3">
       <div class="field">
-        <label>Avg Revenue ($)</label>
-        <input type="number" inputmode="decimal" id="rev1" placeholder="0" min="0" oninput="calc()">
+        <label>Current Rev ($)</label>
+        <input type="number" inputmode="decimal" id="cur_rev" placeholder="12804" oninput="calc(); save()">
       </div>
-      <div class="operator">×</div>
       <div class="field">
-        <label>Times Sold</label>
+        <label>Current % biz</label>
+        <input type="number" inputmode="decimal" id="cur_pct" placeholder="6" oninput="calc(); save()">
+      </div>
+      <div class="field">
+        <label>Target % biz</label>
+        <input type="number" inputmode="decimal" id="tgt_pct" placeholder="8" oninput="calc(); save()">
+      </div>
+    </div>
+
+    <!-- Derived: Target Rev -->
+    <div class="derived-row">
+      <span class="d-label">Target Rev</span>
+      <span class="d-value" id="d_target_rev">—</span>
+    </div>
+
+    <!-- Row 2: pipeline -->
+    <div class="grid-2" style="margin-top:16px;">
+      <div class="field">
+        <label>Pot Sales</label>
+        <input type="number" inputmode="numeric" id="pot_sales" placeholder="511" oninput="calc(); save()">
+      </div>
+      <div class="field">
+        <label>PC Sales</label>
+        <input type="number" inputmode="numeric" id="pc_sales" placeholder="113" oninput="calc(); save()">
+      </div>
+    </div>
+
+    <!-- Derived: Current Hitrate -->
+    <div class="derived-row">
+      <span class="d-label">Current Hitrate</span>
+      <span class="d-value" id="d_hitrate">—</span>
+    </div>
+
+    <!-- Row 3: avg revenues -->
+    <div class="grid-3" style="margin-top:16px;">
+      <div class="field">
+        <label>1yr Avg ($)</label>
+        <input type="number" inputmode="decimal" id="avg1" placeholder="63" oninput="calc(); save()">
+      </div>
+      <div class="field">
+        <label>2yr Avg ($)</label>
+        <input type="number" inputmode="decimal" id="avg2" placeholder="123" oninput="calc(); save()">
+      </div>
+      <div class="field">
+        <label>3yr Avg ($)</label>
+        <input type="number" inputmode="decimal" id="avg3" placeholder="325" oninput="calc(); save()">
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── WHAT IF ── -->
+  <div class="section-title">What If</div>
+  <div class="card">
+
+    <!-- Hitrate row -->
+    <div class="wi-row">
+      <span class="wi-tag">Hit %</span>
+      <div class="field">
+        <label>Hitrate (blank = current)</label>
+        <input type="number" inputmode="decimal" id="wi_hitrate" placeholder="—" min="0" max="100" oninput="calc()">
+      </div>
+      <span class="wi-rev" id="wi_total_sales" style="color:#8e8e93; font-size:14px;">— sales</span>
+    </div>
+
+    <!-- 1yr -->
+    <div class="wi-row">
+      <span class="wi-tag">1yr</span>
+      <div class="field">
+        <label>Units sold</label>
         <input type="number" inputmode="numeric" id="qty1" placeholder="0" min="0" oninput="calc()">
       </div>
+      <span class="wi-rev" id="sub1">$0</span>
     </div>
-    <div class="row-result">
-      <span class="result-label">Subtotal</span>
-      <span class="result-value" id="sub1">$0</span>
-    </div>
-  </div>
 
-  <!-- 2 Year -->
-  <div class="card">
-    <div class="term-label">2 Year Term</div>
-    <div class="row">
+    <!-- 2yr -->
+    <div class="wi-row">
+      <span class="wi-tag">2yr</span>
       <div class="field">
-        <label>Avg Revenue ($)</label>
-        <input type="number" inputmode="decimal" id="rev2" placeholder="0" min="0" oninput="calc()">
-      </div>
-      <div class="operator">×</div>
-      <div class="field">
-        <label>Times Sold</label>
+        <label>Units sold</label>
         <input type="number" inputmode="numeric" id="qty2" placeholder="0" min="0" oninput="calc()">
       </div>
+      <span class="wi-rev" id="sub2">$0</span>
     </div>
-    <div class="row-result">
-      <span class="result-label">Subtotal</span>
-      <span class="result-value" id="sub2">$0</span>
-    </div>
-  </div>
 
-  <!-- 3 Year -->
-  <div class="card">
-    <div class="term-label">3 Year Term</div>
-    <div class="row">
+    <!-- 3yr -->
+    <div class="wi-row">
+      <span class="wi-tag">3yr</span>
       <div class="field">
-        <label>Avg Revenue ($)</label>
-        <input type="number" inputmode="decimal" id="rev3" placeholder="0" min="0" oninput="calc()">
-      </div>
-      <div class="operator">×</div>
-      <div class="field">
-        <label>Times Sold</label>
+        <label>Units sold</label>
         <input type="number" inputmode="numeric" id="qty3" placeholder="0" min="0" oninput="calc()">
       </div>
+      <span class="wi-rev" id="sub3">$0</span>
     </div>
-    <div class="row-result">
-      <span class="result-label">Subtotal</span>
-      <span class="result-value" id="sub3">$0</span>
+
+    <!-- Balance -->
+    <div class="balance-strip">
+      <span class="bl">Units check</span>
+      <span class="bv muted" id="balance">—</span>
+    </div>
+
+  </div>
+
+  <!-- ── RESULTS ── -->
+  <div class="results-row">
+    <div class="result-box dark">
+      <span class="rl">Total Revenue</span>
+      <span class="rv" id="total">$0</span>
+    </div>
+    <div class="result-box light">
+      <span class="rl">vs Target</span>
+      <span class="rv muted" id="vs_target">—</span>
     </div>
   </div>
 
-  <!-- Total -->
-  <div class="total-card">
-    <span class="total-label">Total Revenue</span>
-    <span class="total-value" id="total">$0</span>
-  </div>
-
-  <button class="reset-btn" onclick="reset()">Reset</button>
+  <button class="reset-btn" onclick="resetWhatIf()">Reset What If</button>
 
   <script>
-    function fmt(n) {
-      return '$' + n.toLocaleString('en-AU', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-    }
+    const BASELINE = ['cur_rev','cur_pct','tgt_pct','pot_sales','pc_sales','avg1','avg2','avg3'];
 
-    function val(id) {
-      return parseFloat(document.getElementById(id).value) || 0;
+    function num(id)  { return parseFloat(document.getElementById(id).value) || 0; }
+    function has(id)  { return document.getElementById(id).value.trim() !== ''; }
+    function ph(id)   { return parseFloat(document.getElementById(id).placeholder) || 0; }
+    function eff(id)  { return has(id) ? num(id) : ph(id); }
+
+    function fmt(n)       { return '$' + Math.round(n).toLocaleString('en-AU'); }
+    function fmtPct(n)    { return (n * 100).toFixed(2) + '%'; }
+    function fmtSigned(n) {
+      return (n >= 0 ? '+' : '−') + '$' + Math.abs(Math.round(n)).toLocaleString('en-AU');
     }
 
     function calc() {
-      const s1 = val('rev1') * val('qty1');
-      const s2 = val('rev2') * val('qty2');
-      const s3 = val('rev3') * val('qty3');
-      document.getElementById('sub1').textContent = fmt(s1);
-      document.getElementById('sub2').textContent = fmt(s2);
-      document.getElementById('sub3').textContent = fmt(s3);
-      document.getElementById('total').textContent = fmt(s1 + s2 + s3);
+      // ── Baseline derived values ──
+      const curRev  = eff('cur_rev');
+      const curPct  = eff('cur_pct') / 100;
+      const tgtPct  = eff('tgt_pct') / 100;
+      const potSales = eff('pot_sales');
+      const pcSales  = eff('pc_sales');
+      const avg1 = eff('avg1');
+      const avg2 = eff('avg2');
+      const avg3 = eff('avg3');
+
+      // Target Rev = (Current Rev / Current %) × Target %
+      const targetRev = curPct > 0 ? (curRev / curPct) * tgtPct : 0;
+      // Current Hitrate = PC Sales / Pot Sales
+      const curHitrate = potSales > 0 ? pcSales / potSales : 0;
+
+      document.getElementById('d_target_rev').textContent = targetRev > 0 ? fmt(targetRev) : '—';
+      document.getElementById('d_hitrate').textContent    = curHitrate > 0 ? fmtPct(curHitrate) : '—';
+
+      // ── What If ──
+      // Hitrate: use typed value if present, else fall back to current hitrate
+      const wiHitrate = has('wi_hitrate') ? num('wi_hitrate') / 100 : curHitrate;
+      const totalSalesF = potSales * wiHitrate;          // fractional (e.g. 76.65)
+      const totalSalesDisp = totalSalesF > 0
+        ? totalSalesF.toFixed(2).replace(/\.00$/, '')
+        : '—';
+
+      document.getElementById('wi_total_sales').textContent = totalSalesF > 0
+        ? totalSalesDisp + ' sales' : '— sales';
+
+      const qty1 = num('qty1');
+      const qty2 = num('qty2');
+      const qty3 = num('qty3');
+
+      const sub1  = qty1 * avg1;
+      const sub2  = qty2 * avg2;
+      const sub3  = qty3 * avg3;
+      const total = sub1 + sub2 + sub3;
+
+      document.getElementById('sub1').textContent = fmt(sub1);
+      document.getElementById('sub2').textContent = fmt(sub2);
+      document.getElementById('sub3').textContent = fmt(sub3);
+      document.getElementById('total').textContent = fmt(total);
+
+      // Balance: totalAllocated − totalSalesF  (matches Excel C24 = B24 − E20)
+      const balEl = document.getElementById('balance');
+      if (totalSalesF === 0) {
+        balEl.textContent = '—';
+        balEl.className = 'bv muted';
+      } else {
+        const allocated = qty1 + qty2 + qty3;
+        const rem = totalSalesF - allocated;          // positive = still to allocate
+        const remStr = Math.abs(rem) < 0.01
+          ? allocated + ' / ' + totalSalesDisp + ' ✓'
+          : rem > 0
+            ? allocated + ' / ' + totalSalesDisp + '  (' + rem.toFixed(2) + ' left)'
+            : allocated + ' / ' + totalSalesDisp + '  (' + Math.abs(rem).toFixed(2) + ' over)';
+        balEl.textContent = remStr;
+        balEl.className = 'bv ' + (Math.abs(rem) < 0.01 ? 'green' : rem > 0 ? 'orange' : 'red');
+      }
+
+      // vs Target
+      const vsEl = document.getElementById('vs_target');
+      if (targetRev === 0 && total === 0) {
+        vsEl.textContent = '—';
+        vsEl.className = 'rv muted';
+      } else {
+        const diff = total - targetRev;
+        vsEl.textContent = fmtSigned(diff);
+        vsEl.className = 'rv ' + (diff >= 0 ? 'green' : 'red');
+      }
     }
 
-    function reset() {
-      ['rev1','qty1','rev2','qty2','rev3','qty3'].forEach(id => {
-        document.getElementById(id).value = '';
+    function save() {
+      const s = {};
+      BASELINE.forEach(k => { s[k] = document.getElementById(k).value; });
+      localStorage.setItem('whatif_v2', JSON.stringify(s));
+    }
+
+    function load() {
+      try {
+        const s = JSON.parse(localStorage.getItem('whatif_v2') || '{}');
+        BASELINE.forEach(k => { if (s[k]) document.getElementById(k).value = s[k]; });
+      } catch(e) {}
+    }
+
+    function resetWhatIf() {
+      ['wi_hitrate','qty1','qty2','qty3'].forEach(k => {
+        document.getElementById(k).value = '';
       });
       calc();
     }
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js');
-    }
+    load();
+    calc();
   </script>
 </body>
 </html>
