@@ -365,9 +365,10 @@
     }
 
     function resetWhatIf() {
-      ['wi_hitrate','qty1','qty2','qty3'].forEach(k => {
+      [...BASELINE, 'wi_hitrate','qty1','qty2','qty3'].forEach(k => {
         document.getElementById(k).value = '';
       });
+      localStorage.removeItem('whatif_v2');
       calc();
     }
 
