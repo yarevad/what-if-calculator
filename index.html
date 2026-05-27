@@ -263,7 +263,7 @@
   </div>
 
   <button class="reset-btn" onclick="resetWhatIf()">Reset What If</button>
-  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v4</p>
+  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v5</p>
 
   <script>
     const BASELINE = ['cur_rev','cur_pct','tgt_pct','pot_sales','pc_sales','avg1','avg2','avg3'];
@@ -347,7 +347,11 @@
 
       // vs Target
       const vsEl = document.getElementById('vs_target');
-      if (targetRev === 0 && total === 0) {
+      const hasAnyReal = BASELINE.some(k => has(k));
+      if (!hasAnyReal && total === 0) {
+        vsEl.textContent = '—';
+        vsEl.className = 'rv muted';
+      } else if (targetRev === 0 && total === 0) {
         vsEl.textContent = '—';
         vsEl.className = 'rv muted';
       } else {
