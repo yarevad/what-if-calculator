@@ -263,7 +263,7 @@
   </div>
 
   <button class="reset-btn" onclick="resetWhatIf()">Reset What If</button>
-  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v3</p>
+  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v4</p>
 
   <script>
     const BASELINE = ['cur_rev','cur_pct','tgt_pct','pot_sales','pc_sales','avg1','avg2','avg3'];
@@ -295,8 +295,13 @@
       // Current Hitrate = PC Sales / Pot Sales
       const curHitrate = potSales > 0 ? pcSales / potSales : 0;
 
-      document.getElementById('d_target_rev').textContent = targetRev > 0 ? fmt(targetRev) : '—';
-      document.getElementById('d_hitrate').textContent    = curHitrate > 0 ? fmtPct(curHitrate) : '—';
+      const tRevEl = document.getElementById('d_target_rev');
+      tRevEl.textContent = targetRev > 0 ? fmt(targetRev) : '—';
+      tRevEl.style.color = (has('cur_rev') && has('cur_pct') && has('tgt_pct')) ? '#1c1c1e' : '#8e8e93';
+
+      const hrEl = document.getElementById('d_hitrate');
+      hrEl.textContent = curHitrate > 0 ? fmtPct(curHitrate) : '—';
+      hrEl.style.color = (has('pot_sales') && has('pc_sales')) ? '#1c1c1e' : '#8e8e93';
 
       // ── What If ──
       // Hitrate: use typed value if present, else fall back to current hitrate
