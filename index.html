@@ -153,13 +153,9 @@
       <div class="field">
         <label>Target % biz</label>
         <input type="number" inputmode="decimal" id="tgt_pct" placeholder="8" oninput="calc(); save()">
+        <span style="font-size:11px; color:#8e8e93; margin-top:6px; display:block;">Target Rev</span>
+        <span style="font-size:16px; font-weight:600;" id="d_target_rev">—</span>
       </div>
-    </div>
-
-    <!-- Derived: Target Rev -->
-    <div class="derived-row">
-      <span class="d-label">Target Rev</span>
-      <span class="d-value" id="d_target_rev">—</span>
     </div>
 
     <!-- Row 2: pipeline -->
@@ -263,7 +259,7 @@
   </div>
 
   <button class="reset-btn" onclick="resetWhatIf()">Reset What If</button>
-  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v7</p>
+  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v8</p>
 
   <script>
     const BASELINE = ['cur_rev','cur_pct','tgt_pct','pot_sales','pc_sales','avg1','avg2','avg3'];
