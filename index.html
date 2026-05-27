@@ -243,7 +243,7 @@
     </div>
 
     <!-- Balance -->
-    <div class="balance-strip">
+    <div class="balance-strip" style="justify-content: flex-start; gap: 10px;">
       <span class="bl">Units check</span>
       <span class="bv muted" id="balance">—</span>
     </div>
@@ -263,7 +263,7 @@
   </div>
 
   <button class="reset-btn" onclick="resetWhatIf()">Reset What If</button>
-  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v6</p>
+  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v7</p>
 
   <script>
     const BASELINE = ['cur_rev','cur_pct','tgt_pct','pot_sales','pc_sales','avg1','avg2','avg3'];
@@ -335,14 +335,16 @@
         balEl.className = 'bv muted';
       } else {
         const allocated = qty1 + qty2 + qty3;
-        const rem = totalSalesF - allocated;          // positive = still to allocate
-        const remStr = Math.abs(rem) < 0.01
-          ? allocated + ' / ' + totalSalesDisp + ' ✓'
+        const rem = totalSalesF - allocated;
+        const totalR = Math.round(totalSalesF);
+        const remR = Math.round(Math.abs(rem));
+        const remStr = remR === 0
+          ? allocated + ' / ' + totalR + ' ✓'
           : rem > 0
-            ? allocated + ' / ' + totalSalesDisp + '  (' + rem.toFixed(2) + ' left)'
-            : allocated + ' / ' + totalSalesDisp + '  (' + Math.abs(rem).toFixed(2) + ' over)';
+            ? allocated + ' / ' + totalR + '  (' + remR + ' left)'
+            : allocated + ' / ' + totalR + '  (' + remR + ' over)';
         balEl.textContent = remStr;
-        balEl.className = 'bv ' + (Math.abs(rem) < 0.01 ? 'green' : rem > 0 ? 'orange' : 'red');
+        balEl.className = 'bv ' + (remR === 0 ? 'green' : rem > 0 ? 'orange' : 'red');
       }
 
       // vs Target

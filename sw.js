@@ -1,4 +1,4 @@
-const CACHE = 'whatif-v6';
+const CACHE = 'whatif-v7';
 const FILES = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
