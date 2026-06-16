@@ -19,7 +19,22 @@
     }
 
     h1 { font-size: 28px; font-weight: 700; color: #1c1c1e; margin-bottom: 4px; }
-    .subtitle { font-size: 14px; color: #8e8e93; margin-bottom: 28px; }
+    .subtitle { font-size: 14px; color: #8e8e93; }
+
+    .header-row {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 28px;
+    }
+
+    .share-btn {
+      display: flex; align-items: center; gap: 5px;
+      padding: 8px 14px; font-size: 14px; font-weight: 600; color: #007aff;
+      background: #fff; border: none; border-radius: 10px;
+      cursor: pointer; -webkit-appearance: none;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      flex-shrink: 0; margin-top: 4px;
+    }
+    .share-btn:active { opacity: 0.6; }
 
     .section-title {
       font-size: 12px; font-weight: 600; color: #8e8e93;
@@ -140,8 +155,18 @@
 </head>
 <body>
 
-  <h1>What If</h1>
-  <p class="subtitle">Revenue projection calculator</p>
+  <div class="header-row">
+    <div>
+      <h1>What If</h1>
+      <p class="subtitle">Revenue projection calculator</p>
+    </div>
+    <button class="share-btn" onclick="shareResults()" aria-label="Share results">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 6L12 2L16 6"/><line x1="12" y1="2" x2="12" y2="16"/><path d="M4 12v8a1 1 0 001 1h14a1 1 0 001-1v-8"/>
+      </svg>
+      Share
+    </button>
+  </div>
 
   <!-- ── BASELINE ── -->
   <div class="section-title">Baseline</div>
@@ -275,10 +300,11 @@
   </div>
 
   <button class="reset-btn" onclick="resetWhatIf()">Reset What If</button>
-  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v9</p>
+  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v10</p>
 
   <script>
     const BASELINE = ['cur_rev','cur_pct','tgt_pct','pot_sales','pc_sales','avg1','avg2','avg3'];
+    let _s = {};
 
     function num(id)  { return parseFloat(document.getElementById(id).value) || 0; }
     function has(id)  { return document.getElementById(id).value.trim() !== ''; }
@@ -381,6 +407,53 @@
         const diff = total - targetRev;
         vsEl.textContent = fmtSigned(diff);
         vsEl.className = 'rv ' + (diff >= 0 ? 'green' : 'red');
+      }
+
+      _s = {
+        curRev, curPctRaw: eff('cur_pct'), tgtPctRaw: eff('tgt_pct'),
+        potSales, pcSales, avg1, avg2, avg3,
+        curHitrate, wiHitrate, totalSalesF, targetRev,
+        pct1, pct2, pct3, units1, units2, units3,
+        sub1, sub2, sub3, total
+      };
+    }
+
+    function shareResults() {
+      const s = _s;
+      const wiHrLabel = has('wi_hitrate')
+        ? num('wi_hitrate') + '%'
+        : (s.curHitrate * 100).toFixed(2) + '% (current)';
+      const diff = s.total - s.targetRev;
+      const vsTgt = s.targetRev > 0
+        ? (diff >= 0 ? '+' : '−') + '$' + Math.abs(Math.round(diff)).toLocaleString('en-AU')
+        : '—';
+
+      const text = [
+        'What If — Revenue Projection',
+        '—'.repeat(30),
+        'BASELINE',
+        `Current Rev:   ${fmt(s.curRev)}`,
+        `Current % biz: ${s.curPctRaw}%   Target % biz: ${s.tgtPctRaw}%`,
+        `Target Rev:    ${s.targetRev > 0 ? fmt(s.targetRev) : '—'}`,
+        `Pot Sales: ${Math.round(s.potSales)}   PC Sales: ${Math.round(s.pcSales)}   Hitrate: ${(s.curHitrate * 100).toFixed(2)}%`,
+        '',
+        'WHAT IF',
+        `Hitrate: ${wiHrLabel}   →   ${s.totalSalesF > 0 ? s.totalSalesF.toFixed(2) + ' sales' : '—'}`,
+        '',
+        `1yr  ${s.pct1}%  →  ${s.units1} units  ${fmt(s.sub1)}`,
+        `2yr  ${s.pct2}%  →  ${s.units2} units  ${fmt(s.sub2)}`,
+        `3yr  ${s.pct3}%  →  ${s.units3} units  ${fmt(s.sub3)}`,
+        '',
+        `Total Revenue: ${fmt(s.total)}`,
+        `vs Target:     ${vsTgt}`,
+      ].join('\n');
+
+      if (navigator.share) {
+        navigator.share({ title: 'What If — Revenue Projection', text }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(text)
+          .then(() => alert('Copied to clipboard!'))
+          .catch(() => {});
       }
     }
 
