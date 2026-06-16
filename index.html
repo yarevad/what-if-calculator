@@ -87,6 +87,13 @@
       flex-shrink: 0;
     }
 
+    .wi-right {
+      display: flex; flex-direction: column; align-items: flex-end;
+      min-width: 84px; padding-top: 14px; flex-shrink: 0;
+    }
+    .wi-units { font-size: 15px; font-weight: 600; color: #1c1c1e; }
+    .wi-subrev { font-size: 12px; color: #8e8e93; margin-top: 2px; }
+
     /* balance strip */
     .balance-strip {
       display: flex; justify-content: space-between; align-items: center;
@@ -212,30 +219,39 @@
     <div class="wi-row">
       <span class="wi-tag">1yr</span>
       <div class="field">
-        <label>Units sold</label>
-        <input type="number" inputmode="numeric" id="qty1" placeholder="0" min="0" oninput="calc()">
+        <label>% split</label>
+        <input type="number" inputmode="decimal" id="pct1" placeholder="0" min="0" max="100" oninput="calc()">
       </div>
-      <span class="wi-rev" id="sub1">$0</span>
+      <div class="wi-right">
+        <span class="wi-units" id="units1">—</span>
+        <span class="wi-subrev" id="sub1">—</span>
+      </div>
     </div>
 
     <!-- 2yr -->
     <div class="wi-row">
       <span class="wi-tag">2yr</span>
       <div class="field">
-        <label>Units sold</label>
-        <input type="number" inputmode="numeric" id="qty2" placeholder="0" min="0" oninput="calc()">
+        <label>% split</label>
+        <input type="number" inputmode="decimal" id="pct2" placeholder="0" min="0" max="100" oninput="calc()">
       </div>
-      <span class="wi-rev" id="sub2">$0</span>
+      <div class="wi-right">
+        <span class="wi-units" id="units2">—</span>
+        <span class="wi-subrev" id="sub2">—</span>
+      </div>
     </div>
 
     <!-- 3yr -->
     <div class="wi-row">
       <span class="wi-tag">3yr</span>
       <div class="field">
-        <label>Units sold</label>
-        <input type="number" inputmode="numeric" id="qty3" placeholder="0" min="0" oninput="calc()">
+        <label>% split</label>
+        <input type="number" inputmode="decimal" id="pct3" placeholder="0" min="0" max="100" oninput="calc()">
       </div>
-      <span class="wi-rev" id="sub3">$0</span>
+      <div class="wi-right">
+        <span class="wi-units" id="units3">—</span>
+        <span class="wi-subrev" id="sub3">—</span>
+      </div>
     </div>
 
     <!-- Balance -->
@@ -259,7 +275,7 @@
   </div>
 
   <button class="reset-btn" onclick="resetWhatIf()">Reset What If</button>
-  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v8</p>
+  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v9</p>
 
   <script>
     const BASELINE = ['cur_rev','cur_pct','tgt_pct','pot_sales','pc_sales','avg1','avg2','avg3'];
@@ -310,35 +326,44 @@
       document.getElementById('wi_total_sales').textContent = totalSalesF > 0
         ? totalSalesDisp + ' sales' : '— sales';
 
-      const qty1 = num('qty1');
-      const qty2 = num('qty2');
-      const qty3 = num('qty3');
+      const pct1 = num('pct1');
+      const pct2 = num('pct2');
+      const pct3 = num('pct3');
 
-      const sub1  = qty1 * avg1;
-      const sub2  = qty2 * avg2;
-      const sub3  = qty3 * avg3;
+      const units1 = Math.round((pct1 / 100) * totalSalesF);
+      const units2 = Math.round((pct2 / 100) * totalSalesF);
+      const units3 = Math.round((pct3 / 100) * totalSalesF);
+
+      const sub1  = units1 * avg1;
+      const sub2  = units2 * avg2;
+      const sub3  = units3 * avg3;
       const total = sub1 + sub2 + sub3;
 
-      document.getElementById('sub1').textContent = fmt(sub1);
-      document.getElementById('sub2').textContent = fmt(sub2);
-      document.getElementById('sub3').textContent = fmt(sub3);
+      function setUnitRow(unitsId, subId, units, rev, active) {
+        document.getElementById(unitsId).textContent = active ? units + ' units' : '—';
+        document.getElementById(subId).textContent   = active ? fmt(rev) : '—';
+      }
+
+      const rowsActive = totalSalesF > 0;
+      setUnitRow('units1', 'sub1', units1, sub1, rowsActive);
+      setUnitRow('units2', 'sub2', units2, sub2, rowsActive);
+      setUnitRow('units3', 'sub3', units3, sub3, rowsActive);
       document.getElementById('total').textContent = fmt(total);
 
-      // Balance: totalAllocated − totalSalesF  (matches Excel C24 = B24 − E20)
+      // Balance: % split check — should sum to 100%
       const balEl = document.getElementById('balance');
       if (totalSalesF === 0) {
         balEl.textContent = '—';
         balEl.className = 'bv muted';
       } else {
-        const allocated = qty1 + qty2 + qty3;
-        const rem = totalSalesF - allocated;
-        const totalR = Math.round(totalSalesF);
+        const totalPct = pct1 + pct2 + pct3;
+        const rem = 100 - totalPct;
         const remR = Math.round(Math.abs(rem));
         const remStr = remR === 0
-          ? allocated + ' / ' + totalR + ' ✓'
+          ? totalPct + '% ✓'
           : rem > 0
-            ? allocated + ' / ' + totalR + '  (' + remR + ' left)'
-            : allocated + ' / ' + totalR + '  (' + remR + ' over)';
+            ? totalPct + '% / 100%  (' + remR + '% left)'
+            : totalPct + '% / 100%  (' + remR + '% over)';
         balEl.textContent = remStr;
         balEl.className = 'bv ' + (remR === 0 ? 'green' : rem > 0 ? 'orange' : 'red');
       }
@@ -373,7 +398,7 @@
     }
 
     function resetWhatIf() {
-      [...BASELINE, 'wi_hitrate','qty1','qty2','qty3'].forEach(k => {
+      [...BASELINE, 'wi_hitrate','pct1','pct2','pct3'].forEach(k => {
         document.getElementById(k).value = '';
       });
       localStorage.removeItem('whatif_v2');
