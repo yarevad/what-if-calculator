@@ -327,7 +327,7 @@
   </div>
 
   <button class="reset-btn" onclick="resetWhatIf()">Reset What If</button>
-  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v12</p>
+  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v13</p>
 
   <script>
     const BASELINE = ['cur_rev','cur_pct','tgt_pct','pot_sales','pc_sales','avg1','avg2','avg3'];
@@ -538,12 +538,23 @@
     }
 
     function setMode(mode) {
+      const prev = inputMode;
       inputMode = mode;
       document.getElementById('toggle-pct').classList.toggle('active', mode === 'pct');
       document.getElementById('toggle-units').classList.toggle('active', mode === 'units');
       document.getElementById('bal-label').textContent = mode === 'pct' ? '% check' : 'Units check';
+      const totalSalesF = _s.totalSalesF || 0;
       ['1','2','3'].forEach(n => {
         const input = document.getElementById('pct' + n);
+        const raw = input.value.trim();
+        if (raw !== '' && totalSalesF > 0) {
+          const val = parseFloat(raw) || 0;
+          if (prev === 'pct' && mode === 'units') {
+            input.value = Math.round((val / 100) * totalSalesF);
+          } else if (prev === 'units' && mode === 'pct') {
+            input.value = parseFloat(((val / totalSalesF) * 100).toFixed(1));
+          }
+        }
         input.previousElementSibling.textContent = mode === 'pct' ? '% split' : 'Units';
         if (mode === 'pct') {
           input.setAttribute('max', '100');
@@ -552,7 +563,6 @@
           input.removeAttribute('max');
           input.setAttribute('inputmode', 'numeric');
         }
-        input.value = '';
       });
       calc();
     }
