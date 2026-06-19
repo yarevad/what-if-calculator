@@ -152,6 +152,26 @@
     .orange { color: #ff9500; }
     .red    { color: #ff3b30; }
     .muted  { color: #8e8e93; }
+
+    .wi-section-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin: 0 4px 8px;
+    }
+    .wi-section-header .section-title { margin: 0; }
+
+    .mode-toggle {
+      display: flex; background: #e5e5ea; border-radius: 8px; padding: 2px; gap: 2px;
+    }
+    .toggle-pill {
+      padding: 4px 12px; font-size: 12px; font-weight: 600;
+      border: none; border-radius: 6px; cursor: pointer;
+      background: transparent; color: #8e8e93; -webkit-appearance: none;
+      transition: background 0.15s, color 0.15s;
+    }
+    .toggle-pill.active {
+      background: #fff; color: #1c1c1e;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
   </style>
 </head>
 <body>
@@ -228,7 +248,13 @@
   </div>
 
   <!-- ── WHAT IF ── -->
-  <div class="section-title">What If</div>
+  <div class="wi-section-header">
+    <span class="section-title">What If</span>
+    <div class="mode-toggle">
+      <button id="toggle-pct"   class="toggle-pill active" onclick="setMode('pct')">%</button>
+      <button id="toggle-units" class="toggle-pill"        onclick="setMode('units')">Units</button>
+    </div>
+  </div>
   <div class="card">
 
     <!-- Hitrate row -->
@@ -282,7 +308,7 @@
 
     <!-- Balance -->
     <div class="balance-strip" style="justify-content: flex-start; gap: 10px;">
-      <span class="bl">Units check</span>
+      <span class="bl" id="bal-label">% check</span>
       <span class="bv muted" id="balance">—</span>
     </div>
 
@@ -301,11 +327,12 @@
   </div>
 
   <button class="reset-btn" onclick="resetWhatIf()">Reset What If</button>
-  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v11</p>
+  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v12</p>
 
   <script>
     const BASELINE = ['cur_rev','cur_pct','tgt_pct','pot_sales','pc_sales','avg1','avg2','avg3'];
     let _s = {};
+    let inputMode = 'pct';
 
     function num(id)  { return parseFloat(document.getElementById(id).value) || 0; }
     function has(id)  { return document.getElementById(id).value.trim() !== ''; }
@@ -353,37 +380,50 @@
       document.getElementById('wi_total_sales').textContent = totalSalesF > 0
         ? totalSalesDisp + ' sales' : '— sales';
 
-      const pct1 = num('pct1');
-      const pct2 = num('pct2');
-      const pct3 = num('pct3');
+      const wi1 = num('pct1');
+      const wi2 = num('pct2');
+      const wi3 = num('pct3');
 
-      const units1 = Math.round((pct1 / 100) * totalSalesF);
-      const units2 = Math.round((pct2 / 100) * totalSalesF);
-      const units3 = Math.round((pct3 / 100) * totalSalesF);
+      let units1, units2, units3, disp1, disp2, disp3;
+      const rowsActive = totalSalesF > 0;
+
+      if (inputMode === 'pct') {
+        units1 = Math.round((wi1 / 100) * totalSalesF);
+        units2 = Math.round((wi2 / 100) * totalSalesF);
+        units3 = Math.round((wi3 / 100) * totalSalesF);
+        disp1 = rowsActive ? units1 + ' units' : '—';
+        disp2 = rowsActive ? units2 + ' units' : '—';
+        disp3 = rowsActive ? units3 + ' units' : '—';
+      } else {
+        units1 = wi1; units2 = wi2; units3 = wi3;
+        const toPct = u => totalSalesF > 0 ? ((u / totalSalesF) * 100).toFixed(1) + '%' : '—';
+        disp1 = rowsActive ? toPct(units1) : '—';
+        disp2 = rowsActive ? toPct(units2) : '—';
+        disp3 = rowsActive ? toPct(units3) : '—';
+      }
 
       const sub1  = units1 * avg1;
       const sub2  = units2 * avg2;
       const sub3  = units3 * avg3;
       const total = sub1 + sub2 + sub3;
 
-      function setUnitRow(unitsId, subId, units, rev, active) {
-        document.getElementById(unitsId).textContent = active ? units + ' units' : '—';
-        document.getElementById(subId).textContent   = active ? fmt(rev) : '—';
+      function setRow(dispId, subId, disp, rev, active) {
+        document.getElementById(dispId).textContent = active ? disp : '—';
+        document.getElementById(subId).textContent  = active ? fmt(rev) : '—';
       }
 
-      const rowsActive = totalSalesF > 0;
-      setUnitRow('units1', 'sub1', units1, sub1, rowsActive);
-      setUnitRow('units2', 'sub2', units2, sub2, rowsActive);
-      setUnitRow('units3', 'sub3', units3, sub3, rowsActive);
+      setRow('units1', 'sub1', disp1, sub1, rowsActive);
+      setRow('units2', 'sub2', disp2, sub2, rowsActive);
+      setRow('units3', 'sub3', disp3, sub3, rowsActive);
       document.getElementById('total').textContent = fmt(total);
 
-      // Balance: % split check — should sum to 100%
+      // Balance strip
       const balEl = document.getElementById('balance');
-      if (totalSalesF === 0) {
+      if (!rowsActive) {
         balEl.textContent = '—';
         balEl.className = 'bv muted';
-      } else {
-        const totalPct = pct1 + pct2 + pct3;
+      } else if (inputMode === 'pct') {
+        const totalPct = wi1 + wi2 + wi3;
         const rem = 100 - totalPct;
         const remR = Math.round(Math.abs(rem));
         const remStr = remR === 0
@@ -391,6 +431,18 @@
           : rem > 0
             ? totalPct + '% / 100%  (' + remR + '% left)'
             : totalPct + '% / 100%  (' + remR + '% over)';
+        balEl.textContent = remStr;
+        balEl.className = 'bv ' + (remR === 0 ? 'green' : rem > 0 ? 'orange' : 'red');
+      } else {
+        const allocated = units1 + units2 + units3;
+        const totalR = Math.round(totalSalesF);
+        const rem = totalSalesF - allocated;
+        const remR = Math.round(Math.abs(rem));
+        const remStr = remR === 0
+          ? allocated + ' / ' + totalR + ' ✓'
+          : rem > 0
+            ? allocated + ' / ' + totalR + '  (' + remR + ' left)'
+            : allocated + ' / ' + totalR + '  (' + remR + ' over)';
         balEl.textContent = remStr;
         balEl.className = 'bv ' + (remR === 0 ? 'green' : rem > 0 ? 'orange' : 'red');
       }
@@ -414,8 +466,10 @@
         curRev, curPctRaw: eff('cur_pct'), tgtPctRaw: eff('tgt_pct'),
         potSales, pcSales, avg1, avg2, avg3,
         curHitrate, wiHitrate, totalSalesF, targetRev,
-        pct1, pct2, pct3, units1, units2, units3,
-        sub1, sub2, sub3, total
+        wi1, wi2, wi3, units1, units2, units3,
+        disp1, disp2, disp3,
+        sub1, sub2, sub3, total,
+        mode: inputMode
       };
     }
 
@@ -429,6 +483,10 @@
         ? (diff >= 0 ? '+' : '−') + '$' + Math.abs(Math.round(diff)).toLocaleString('en-AU')
         : '—';
 
+      const row = (term, wi, disp, rev) => s.mode === 'pct'
+        ? `${term}  ${wi}%  →  ${disp}  ${fmt(rev)}`
+        : `${term}  ${wi} units  →  ${disp}  ${fmt(rev)}`;
+
       const text = [
         'What If — Revenue Projection',
         '—'.repeat(30),
@@ -441,9 +499,9 @@
         'WHAT IF',
         `Hitrate: ${wiHrLabel}   →   ${s.totalSalesF > 0 ? s.totalSalesF.toFixed(2) + ' sales' : '—'}`,
         '',
-        `1yr  ${s.pct1}%  →  ${s.units1} units  ${fmt(s.sub1)}`,
-        `2yr  ${s.pct2}%  →  ${s.units2} units  ${fmt(s.sub2)}`,
-        `3yr  ${s.pct3}%  →  ${s.units3} units  ${fmt(s.sub3)}`,
+        row('1yr', s.wi1, s.disp1, s.sub1),
+        row('2yr', s.wi2, s.disp2, s.sub2),
+        row('3yr', s.wi3, s.disp3, s.sub3),
         '',
         `Total Revenue: ${fmt(s.total)}`,
         `vs Target:     ${vsTgt}`,
@@ -476,6 +534,26 @@
         document.getElementById(k).value = '';
       });
       localStorage.removeItem('whatif_v2');
+      calc();
+    }
+
+    function setMode(mode) {
+      inputMode = mode;
+      document.getElementById('toggle-pct').classList.toggle('active', mode === 'pct');
+      document.getElementById('toggle-units').classList.toggle('active', mode === 'units');
+      document.getElementById('bal-label').textContent = mode === 'pct' ? '% check' : 'Units check';
+      ['1','2','3'].forEach(n => {
+        const input = document.getElementById('pct' + n);
+        input.previousElementSibling.textContent = mode === 'pct' ? '% split' : 'Units';
+        if (mode === 'pct') {
+          input.setAttribute('max', '100');
+          input.setAttribute('inputmode', 'decimal');
+        } else {
+          input.removeAttribute('max');
+          input.setAttribute('inputmode', 'numeric');
+        }
+        input.value = '';
+      });
       calc();
     }
 
