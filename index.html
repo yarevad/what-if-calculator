@@ -176,15 +176,15 @@
     <div class="grid-3">
       <div class="field">
         <label>Current Rev ($)</label>
-        <input type="number" inputmode="decimal" id="cur_rev" placeholder="12804" oninput="calc(); save()">
+        <input type="number" inputmode="decimal" id="cur_rev" placeholder="0" oninput="calc(); save()">
       </div>
       <div class="field">
         <label>Current % biz</label>
-        <input type="number" inputmode="decimal" id="cur_pct" placeholder="6" oninput="calc(); save()">
+        <input type="number" inputmode="decimal" id="cur_pct" placeholder="0" oninput="calc(); save()">
       </div>
       <div class="field">
         <label>Target % biz</label>
-        <input type="number" inputmode="decimal" id="tgt_pct" placeholder="8" oninput="calc(); save()">
+        <input type="number" inputmode="decimal" id="tgt_pct" placeholder="0" oninput="calc(); save()">
         <span style="font-size:11px; color:#8e8e93; margin-top:6px; display:block;">Target Rev</span>
         <span style="font-size:16px; font-weight:600;" id="d_target_rev">—</span>
       </div>
@@ -194,11 +194,11 @@
     <div class="grid-2" style="margin-top:16px;">
       <div class="field">
         <label>Pot Sales</label>
-        <input type="number" inputmode="numeric" id="pot_sales" placeholder="511" oninput="calc(); save()">
+        <input type="number" inputmode="numeric" id="pot_sales" placeholder="0" oninput="calc(); save()">
       </div>
       <div class="field">
         <label>PC Sales</label>
-        <input type="number" inputmode="numeric" id="pc_sales" placeholder="113" oninput="calc(); save()">
+        <input type="number" inputmode="numeric" id="pc_sales" placeholder="0" oninput="calc(); save()">
       </div>
     </div>
 
@@ -212,15 +212,15 @@
     <div class="grid-3" style="margin-top:16px;">
       <div class="field">
         <label>1yr Avg ($)</label>
-        <input type="number" inputmode="decimal" id="avg1" placeholder="63" oninput="calc(); save()">
+        <input type="number" inputmode="decimal" id="avg1" placeholder="0" oninput="calc(); save()">
       </div>
       <div class="field">
         <label>2yr Avg ($)</label>
-        <input type="number" inputmode="decimal" id="avg2" placeholder="123" oninput="calc(); save()">
+        <input type="number" inputmode="decimal" id="avg2" placeholder="0" oninput="calc(); save()">
       </div>
       <div class="field">
         <label>3yr Avg ($)</label>
-        <input type="number" inputmode="decimal" id="avg3" placeholder="325" oninput="calc(); save()">
+        <input type="number" inputmode="decimal" id="avg3" placeholder="0" oninput="calc(); save()">
       </div>
     </div>
 
@@ -300,7 +300,7 @@
   </div>
 
   <button class="reset-btn" onclick="resetWhatIf()">Reset What If</button>
-  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v10</p>
+  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v11</p>
 
   <script>
     const BASELINE = ['cur_rev','cur_pct','tgt_pct','pot_sales','pc_sales','avg1','avg2','avg3'];
