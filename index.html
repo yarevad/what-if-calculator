@@ -190,7 +190,13 @@
   </div>
 
   <!-- ── BASELINE ── -->
-  <div class="section-title">Baseline</div>
+  <div class="wi-section-header">
+    <span class="section-title">Baseline</span>
+    <div class="mode-toggle">
+      <button id="toggle-baseline-p" class="toggle-pill active" onclick="setBaselineMode('P')">P</button>
+      <button id="toggle-baseline-a" class="toggle-pill"        onclick="setBaselineMode('A')">A</button>
+    </div>
+  </div>
   <div class="card">
 
     <!-- Row 1: revenue + percentages -->
@@ -202,6 +208,10 @@
       <div class="field">
         <label>Current % biz</label>
         <input type="number" inputmode="decimal" id="cur_pct" placeholder="0" oninput="calc(); save()">
+        <div id="pct_revenue_row" style="display:none;">
+          <span style="font-size:11px; color:#8e8e93; margin-top:6px; display:block;">% Revenue</span>
+          <span style="font-size:16px; font-weight:600;" id="d_pct_revenue">—</span>
+        </div>
       </div>
       <div class="field">
         <label>Target % biz</label>
@@ -327,12 +337,13 @@
   </div>
 
   <button class="reset-btn" onclick="resetWhatIf()">Reset What If</button>
-  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v14</p>
+  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v16</p>
 
   <script>
     const BASELINE = ['cur_rev','cur_pct','tgt_pct','pot_sales','pc_sales','avg1','avg2','avg3'];
     let _s = {};
     let inputMode = 'pct';
+    let baselineMode = 'P';
 
     function num(id)  { return parseFloat(document.getElementById(id).value) || 0; }
     function has(id)  { return document.getElementById(id).value.trim() !== ''; }
@@ -356,14 +367,25 @@
       const avg2 = eff('avg2');
       const avg3 = eff('avg3');
 
+      // % Revenue (A mode only) = Actual Revenue × Current % biz
+      const pctRevenue = curRev * curPct;
       // Target Rev = (Current Rev / Current %) × Target %
-      const targetRev = curPct > 0 ? (curRev / curPct) * tgtPct : 0;
+      // In A mode, Actual Revenue is the store total, so the % Revenue slice
+      // drives the target: (% Revenue / Current %) × Target % = Actual Revenue × Target %
+      const targetRev = curPct > 0
+        ? (baselineMode === 'A' ? curRev * tgtPct : (curRev / curPct) * tgtPct)
+        : 0;
       // Current Hitrate = PC Sales / Pot Sales
       const curHitrate = potSales > 0 ? pcSales / potSales : 0;
 
       const tRevEl = document.getElementById('d_target_rev');
       tRevEl.textContent = targetRev > 0 ? fmt(targetRev) : '—';
       tRevEl.style.color = (has('cur_rev') && has('cur_pct') && has('tgt_pct')) ? '#1c1c1e' : '#8e8e93';
+
+      const pRevEl = document.getElementById('d_pct_revenue');
+      const pctRevActive = has('cur_rev') && has('cur_pct');
+      pRevEl.textContent = pctRevActive ? fmt(pctRevenue) : '—';
+      pRevEl.style.color = pctRevActive ? '#1c1c1e' : '#8e8e93';
 
       const hrEl = document.getElementById('d_hitrate');
       hrEl.textContent = curHitrate > 0 ? fmtPct(curHitrate) : '—';
@@ -466,6 +488,7 @@
         curRev, curPctRaw: eff('cur_pct'), tgtPctRaw: eff('tgt_pct'),
         potSales, pcSales, avg1, avg2, avg3,
         curHitrate, wiHitrate, totalSalesF, targetRev,
+        pctRevenue, baselineMode,
         wi1, wi2, wi3, units1, units2, units3,
         disp1, disp2, disp3,
         sub1, sub2, sub3, total,
@@ -534,6 +557,14 @@
         document.getElementById(k).value = '';
       });
       localStorage.removeItem('whatif_v2');
+      calc();
+    }
+
+    function setBaselineMode(mode) {
+      baselineMode = mode;
+      document.getElementById('toggle-baseline-p').classList.toggle('active', mode === 'P');
+      document.getElementById('toggle-baseline-a').classList.toggle('active', mode === 'A');
+      document.getElementById('pct_revenue_row').style.display = mode === 'A' ? 'block' : 'none';
       calc();
     }
 
