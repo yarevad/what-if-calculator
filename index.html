@@ -196,7 +196,7 @@
     <!-- Row 1: revenue + percentages -->
     <div class="grid-3">
       <div class="field">
-        <label>Current Rev ($)</label>
+        <label>Actual Revenue ($)</label>
         <input type="number" inputmode="decimal" id="cur_rev" placeholder="0" oninput="calc(); save()">
       </div>
       <div class="field">
@@ -214,11 +214,11 @@
     <!-- Row 2: pipeline -->
     <div class="grid-2" style="margin-top:16px;">
       <div class="field">
-        <label>Pot Sales</label>
+        <label>Potential Sales</label>
         <input type="number" inputmode="numeric" id="pot_sales" placeholder="0" oninput="calc(); save()">
       </div>
       <div class="field">
-        <label>PC Sales</label>
+        <label>Actual Sales</label>
         <input type="number" inputmode="numeric" id="pc_sales" placeholder="0" oninput="calc(); save()">
       </div>
     </div>
@@ -491,10 +491,10 @@
         'What If — Revenue Projection',
         '—'.repeat(30),
         'BASELINE',
-        `Current Rev:   ${fmt(s.curRev)}`,
+        `Actual Revenue: ${fmt(s.curRev)}`,
         `Current % biz: ${s.curPctRaw}%   Target % biz: ${s.tgtPctRaw}%`,
         `Target Rev:    ${s.targetRev > 0 ? fmt(s.targetRev) : '—'}`,
-        `Pot Sales: ${Math.round(s.potSales)}   PC Sales: ${Math.round(s.pcSales)}   Hitrate: ${(s.curHitrate * 100).toFixed(2)}%`,
+        `Potential Sales: ${Math.round(s.potSales)}   Actual Sales: ${Math.round(s.pcSales)}   Hitrate: ${(s.curHitrate * 100).toFixed(2)}%`,
         '',
         'WHAT IF',
         `Hitrate: ${wiHrLabel}   →   ${s.totalSalesF > 0 ? s.totalSalesF.toFixed(2) + ' sales' : '—'}`,
