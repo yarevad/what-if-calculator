@@ -203,7 +203,7 @@
     <div class="grid-3">
       <div class="field">
         <label>Actual Revenue ($)</label>
-        <input type="number" inputmode="decimal" id="cur_rev" placeholder="0" oninput="calc(); save()">
+        <input type="text" inputmode="decimal" id="cur_rev" placeholder="0" oninput="formatCurrencyInput(this); calc(); save()">
       </div>
       <div class="field">
         <label>Current % biz</label>
@@ -243,15 +243,15 @@
     <div class="grid-3" style="margin-top:16px;">
       <div class="field">
         <label>1yr Avg Rev ($)</label>
-        <input type="number" inputmode="decimal" id="avg1" placeholder="0" oninput="calc(); save()">
+        <input type="text" inputmode="decimal" id="avg1" placeholder="0" oninput="formatCurrencyInput(this); calc(); save()">
       </div>
       <div class="field">
         <label>2yr Avg Rev ($)</label>
-        <input type="number" inputmode="decimal" id="avg2" placeholder="0" oninput="calc(); save()">
+        <input type="text" inputmode="decimal" id="avg2" placeholder="0" oninput="formatCurrencyInput(this); calc(); save()">
       </div>
       <div class="field">
         <label>3yr Avg Rev ($)</label>
-        <input type="number" inputmode="decimal" id="avg3" placeholder="0" oninput="calc(); save()">
+        <input type="text" inputmode="decimal" id="avg3" placeholder="0" oninput="formatCurrencyInput(this); calc(); save()">
       </div>
     </div>
 
@@ -337,15 +337,42 @@
   </div>
 
   <button class="reset-btn" onclick="resetWhatIf()">Reset What If</button>
-  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v16</p>
+  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v17</p>
 
   <script>
     const BASELINE = ['cur_rev','cur_pct','tgt_pct','pot_sales','pc_sales','avg1','avg2','avg3'];
+    const CURRENCY_FIELDS = ['cur_rev','avg1','avg2','avg3'];
+
+    function formatCurrencyInput(el) {
+      const raw = el.value;
+      const caret = el.selectionStart;
+      const digitsBeforeCaret = (raw.slice(0, caret).match(/[0-9.]/g) || []).length;
+
+      let cleaned = raw.replace(/[^0-9.]/g, '');
+      const firstDot = cleaned.indexOf('.');
+      if (firstDot !== -1) {
+        cleaned = cleaned.slice(0, firstDot + 1) + cleaned.slice(firstDot + 1).replace(/\./g, '');
+      }
+      if (cleaned === '') { el.value = ''; return; }
+
+      let [intPart, decPart] = cleaned.split('.');
+      intPart = intPart.replace(/^0+(?=\d)/, '');
+      let formatted = '$' + (intPart === '' ? '0' : Number(intPart).toLocaleString('en-AU'));
+      if (decPart !== undefined) formatted += '.' + decPart;
+      el.value = formatted;
+
+      let seen = 0, newCaret = formatted.length;
+      for (let i = 0; i < formatted.length; i++) {
+        if (/[0-9.]/.test(formatted[i])) seen++;
+        if (seen === digitsBeforeCaret) { newCaret = i + 1; break; }
+      }
+      el.setSelectionRange(newCaret, newCaret);
+    }
     let _s = {};
     let inputMode = 'pct';
     let baselineMode = 'P';
 
-    function num(id)  { return parseFloat(document.getElementById(id).value) || 0; }
+    function num(id)  { return parseFloat(document.getElementById(id).value.replace(/[^0-9.]/g, '')) || 0; }
     function has(id)  { return document.getElementById(id).value.trim() !== ''; }
     function ph(id)   { return parseFloat(document.getElementById(id).placeholder) || 0; }
     function eff(id)  { return has(id) ? num(id) : ph(id); }
@@ -549,6 +576,7 @@
       try {
         const s = JSON.parse(localStorage.getItem('whatif_v2') || '{}');
         BASELINE.forEach(k => { if (s[k]) document.getElementById(k).value = s[k]; });
+        CURRENCY_FIELDS.forEach(k => formatCurrencyInput(document.getElementById(k)));
       } catch(e) {}
     }
 
