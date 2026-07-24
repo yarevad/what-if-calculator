@@ -337,7 +337,7 @@
   </div>
 
   <button class="reset-btn" onclick="resetWhatIf()">Reset What If</button>
-  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v17</p>
+  <p style="text-align:center; font-size:11px; color:#c7c7cc; margin-top:12px;">v18</p>
 
   <script>
     const BASELINE = ['cur_rev','cur_pct','tgt_pct','pot_sales','pc_sales','avg1','avg2','avg3'];
@@ -585,7 +585,7 @@
         document.getElementById(k).value = '';
       });
       localStorage.removeItem('whatif_v2');
-      calc();
+      setBaselineMode('P');
     }
 
     function setBaselineMode(mode) {
