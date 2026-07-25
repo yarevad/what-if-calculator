@@ -1,4 +1,4 @@
-const CACHE = 'whatif-v19';
+const CACHE = 'whatif-v20';
 const FILES = ['./', './index.html', './manifest.json', './assurant-logo.png'];
 
 self.addEventListener('install', e => {
