@@ -1,5 +1,5 @@
-const CACHE = 'whatif-v18';
-const FILES = ['./', './index.html', './manifest.json'];
+const CACHE = 'whatif-v19';
+const FILES = ['./', './index.html', './manifest.json', './assurant-logo.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
