@@ -445,9 +445,29 @@
       const rowsActive = totalSalesF > 0;
 
       if (inputMode === 'pct') {
-        units1 = Math.round((wi1 / 100) * totalSalesF);
-        units2 = Math.round((wi2 / 100) * totalSalesF);
-        units3 = Math.round((wi3 / 100) * totalSalesF);
+        // Largest-remainder rounding: round each row normally, then nudge
+        // whichever row(s) carry the biggest leftover fraction by ±1 unit
+        // so units1+units2+units3 always sums to Math.round(totalSalesF).
+        // (Rounding each row independently let the three roundings drift
+        // apart, so Total Revenue could miss Target Rev by a few dollars.)
+        const raw1 = (wi1 / 100) * totalSalesF;
+        const raw2 = (wi2 / 100) * totalSalesF;
+        const raw3 = (wi3 / 100) * totalSalesF;
+        units1 = Math.floor(raw1);
+        units2 = Math.floor(raw2);
+        units3 = Math.floor(raw3);
+        const targetUnits = Math.round(totalSalesF);
+        let shortfall = targetUnits - (units1 + units2 + units3);
+        const remainders = [
+          { row: 1, rem: raw1 - units1 },
+          { row: 2, rem: raw2 - units2 },
+          { row: 3, rem: raw3 - units3 }
+        ].sort((a, b) => b.rem - a.rem);
+        for (let i = 0; i < remainders.length && shortfall > 0; i++, shortfall--) {
+          if (remainders[i].row === 1) units1++;
+          else if (remainders[i].row === 2) units2++;
+          else units3++;
+        }
         disp1 = rowsActive ? units1 + ' units' : '—';
         disp2 = rowsActive ? units2 + ' units' : '—';
         disp3 = rowsActive ? units3 + ' units' : '—';
